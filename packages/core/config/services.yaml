@@ -18,6 +18,9 @@ services:
     arguments:
       $locator: '@Symfony\Component\Config\FileLocator'
 
+  Symfony\Component\Routing\RequestContext:
+    class: Symfony\Component\Routing\RequestContext
+
   symfony.yaml_router:
     class: Symfony\Component\Routing\Router
     arguments:
