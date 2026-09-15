@@ -76,4 +76,18 @@ final readonly class ProductRepository
             'sku' => $product['sku'] ?? null,
         ]);
     }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findAll(): array
+    {
+        $statement = $this->pdo->query(
+            'SELECT id, title, price, discount_percentage, brand, category, thumbnail
+         FROM product
+         ORDER BY title ASC'
+        );
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

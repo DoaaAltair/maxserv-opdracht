@@ -12,7 +12,8 @@ use Twig\Error\SyntaxError;
 readonly class IndexController
 {
     public function __construct(
-        private TemplateRenderer $templateRenderer
+        private TemplateRenderer $templateRenderer,
+        private \MaxServ\App\Repository\ProductRepository $productRepository
     ) {
     }
 
@@ -24,8 +25,10 @@ readonly class IndexController
     public function index(): void
     {
         // Your logic here
+        $products = $this->productRepository->findAll();
+
         echo $this->templateRenderer->render('index.html.twig', [
-            'message' => 'Hello world!'
+            'products' => $products,
         ]);
     }
 }
