@@ -3,6 +3,8 @@ FROM composer:2.6 AS composer
 # Use the official PHP image as a base image to construct our own image from
 FROM php:8.2.12-apache
 
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
 # Install and enable mysql modules for PHP
 RUN docker-php-ext-install mysqli pdo pdo_mysql && \
     docker-php-ext-enable mysqli pdo pdo_mysql
