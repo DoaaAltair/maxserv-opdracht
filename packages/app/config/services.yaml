@@ -5,8 +5,16 @@ services:
     public: false
 
   MaxServ\App\:
-    resource: '../src/*'
+    resource: "../src/*"
 
   MaxServ\App\Controller\:
-    resource: '../src/Controller'
+    resource: "../src/Controller"
+    public: true
+
+  GuzzleHttp\Client:
+    arguments:
+      $config:
+        timeout: 10
+
+  MaxServ\App\Api\DummyJsonClient:
     public: true
