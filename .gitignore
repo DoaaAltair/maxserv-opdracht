@@ -4,6 +4,8 @@
 # Database
 !database/
 !database/schema.sql
+!bin/
+!bin/import-products.php
 
 # Project files
 !/.gitignore
