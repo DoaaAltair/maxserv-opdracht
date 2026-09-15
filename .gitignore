@@ -1,6 +1,10 @@
 # Ignore everything by default
 *
 
+# Database
+!database/
+!database/schema.sql
+
 # Project files
 !/.gitignore
 !/README.md
