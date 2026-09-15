@@ -19,13 +19,28 @@ readonly class Bootstrap
      */
     public function boot(): void
     {
+        $container = $this->createContainer();
+
+        /** @var Router $router */
+        $router = $container->get(Router::class);
+        $router->match();
+    }
+
+    public function createContainer(): ContainerBuilder
+    {
         $container = new ContainerBuilder();
         $this->configure($container);
 
-        $loader = new YamlFileLoader($container, new FileLocator(APPLICATION_ROOT . '/packages'));
+        $loader = new YamlFileLoader(
+            $container,
+            new FileLocator(APPLICATION_ROOT . '/packages')
+        );
 
         $finder = new Finder();
-        $serviceFiles = $finder->files()->in(APPLICATION_ROOT . '/packages')->name('services.yaml');
+        $serviceFiles = $finder
+            ->files()
+            ->in(APPLICATION_ROOT . '/packages')
+            ->name('services.yaml');
 
         foreach ($serviceFiles as $serviceFile) {
             $loader->load($serviceFile->getPathname());
@@ -33,9 +48,7 @@ readonly class Bootstrap
 
         $container->compile();
 
-        /** @var Router $router */
-        $router = $container->get(Router::class);
-        $router->match();
+        return $container;
     }
 
     private function configure(ContainerBuilder $container): void
