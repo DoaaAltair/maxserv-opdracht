@@ -37,5 +37,6 @@ services:
       - "8080:80"
     volumes:
       - ./:/var/www/html
+      - /var/www/html/vendor
 volumes:
   mysql_data:
