@@ -1,88 +1,488 @@
 # MaxServ B.V. Assignment
 
-This project acts as a foundational implementation for the MaxServ B.V. assignment. You are welcome to modify, expand, and refactor the code as needed to meet the assignment criteria. Please note that while PHP packages are allowed, the use of PHP frameworks is not permitted.
+A Dockerized PHP application built as part of the MaxServ B.V. technical assignment.
+
+The application imports products from the DummyJSON API, stores them in a MySQL database and provides a web-based product catalogue that reads the data from the database.
+
+The implementation uses plain PHP without a PHP framework. External PHP packages are used where appropriate.
+
+---
+
+## Features
+
+The application currently includes:
+
+- Import of products from DummyJSON
+- Database persistence using MySQL
+- Product overview based on database data
+- Product detail pages
+- Standard product price
+- Calculated discounted price
+- Euro price formatting
+- Product thumbnails
+- Category filtering
+- Brand filtering
+- Sorting by:
+  - Title
+  - Price
+  - Brand
+  - Category
+  - Discount percentage
+- Ascending and descending sorting
+- Dependency Injection using Symfony DependencyInjection
+- YAML-based routing
+- Twig templates
+- PHPUnit test for the price calculation
+- Dockerized application environment
+- phpMyAdmin for database inspection
+
+---
+
+## Requirements
+
+To run the project, you need:
+
+- Docker
+- Docker Compose
+- Git
+
+Composer is included in the Docker image, so installing Composer locally is not required.
+
+---
 
 ## Getting Started
-To execute the project, you will need to install the following prerequisites:
 
-- `Docker` - A platform for developing, shipping, and running applications. [Learn more](https://www.docker.com/get-started).
-- `Composer` - A dependency manager for PHP. [Learn more](https://getcomposer.org/).
-- `Git` - A distributed version control system. (Only required if your code is managed in a Git repository) [Learn more](https://git-scm.com/).
+### 1. Clone the repository
 
-Now that all prerequisites are installed, we can initiate the project by following the steps below:
+```bash
+git clone https://github.com/DoaaAltair/maxserv-opdracht.git
+cd maxserv-opdracht
+2. Start the Docker environment
+docker compose up -d --build
 
-1. Execute the `composer install` command to install the project dependencies.
-2. Execute the `docker-compose up -d` command to launch the application.
+The following services will be started:
 
-The project should now be operational and accessible at `http://localhost:8080`.
-You can also access phpMyAdmin at `http://localhost:8081`.
+Service	URL
+Application	http://localhost:8080
+phpMyAdmin	http://localhost:8081
+MySQL	localhost:3307
 
-### Application flow
-The application begins from a single entry point, `public/index.php`, which ensures composer autoloading and initiates a bootstrap process.
-The bootstrap process sets up the application. It creates a `Container` to facilitate dependency injection and a `Router` to manage incoming requests.
+The application uses MySQL internally through the Docker service name db.
 
-A default route is specified in `config/routes.yaml`, which links the `/` route to the `IndexController` and the `index` method.
-The `IndexController` renders the `index.html.twig` template, located in the `templates` directory.
-The `IndexController` also includes the `ProductRepository` as an example of dependency injection and a convenient way to interact with the database.
+Import Products
 
-## Project Structure
+The database schema is created from:
 
-The project is structured as follows:
+database/schema.sql
 
-### Git
-This project employs Git for version control, and basic Git configuration is included.
+Products can be imported from DummyJSON using the provided CLI command:
 
-- `.gitignore` - Lists files and directories that should be ignored by Git. [Learn more](https://git-scm.com/docs/gitignore).
+docker compose run --rm app php bin/import-products.php
 
-### Docker
-The project can be run within a Docker container, with the necessary Docker configuration provided.
+The importer retrieves the products from:
 
-- `Dockerfile` - Contains instructions for building the Docker image. [Learn more](https://docs.docker.com/engine/reference/builder/).
-- `docker-compose.yml` - Defines the services, networks, and volumes for running the Docker container. [Learn more](https://docs.docker.com/compose/compose-file/).
-- `.dockerignore` - Lists files and directories to be ignored by Docker. [Learn more](https://docs.docker.com/engine/reference/builder/#dockerignore-file).
+https://dummyjson.com/products?limit=0
 
-### Composer
-This project utilizes Composer for dependency management, with the relevant configuration included.
+and stores them in the MySQL database.
 
-- `composer.json` - The file used to manage and install project dependencies. [Learn more](https://getcomposer.org/doc/04-schema.md).
+The import process uses an ON DUPLICATE KEY UPDATE strategy, which makes the import command safe to run multiple times without creating duplicate products.
 
-### Configuration
-The project includes configuration files for various tools and services.
+Application
 
-- `config/routes.yaml` - Contains the routing configuration for the project. [Learn more](https://symfony.com/doc/current/routing.html#creating-routes-in-yaml-xml-or-php-files).
+After starting Docker and importing the products, open:
 
-### Packages
-The `packages` directory contains the code for the project.
+http://localhost:8080
 
-- `packages/core` - Contains the core functionality of the application.
-- `packages/app` - The package where the assignment requirements can be implemented.
+The product catalogue is loaded from the MySQL database.
 
-### Public
-The `public` directory contains the entry point for the application. It is advisable to keep this directory as clean as possible and not alter the logic in the `index.php` file.
+The browser does not request product data directly from DummyJSON.
 
-### Templates
-The `templates` directory contains the Twig templates for the application.
+Product catalogue
 
-- `templates/index.html.twig` - The example template provided with the project.
+The overview displays:
 
-## Core Package
-The `core` package encompasses the core functionality of the application. The `core` offers some default functionality that can be utilized while constructing your implementation.
+Product thumbnail
+Title
+Brand
+Category
+Original price
+Discount percentage
+Calculated discounted price
 
-### Database Connection
-The `core` package provides a database connection using PDO. The database connection is configured through environment variables, which can be set in the `docker-compose.yaml` file.
+Products can be filtered and sorted directly from the catalogue.
 
-### Template Rendering
-The `core` package includes a `TemplateRenderer` class that can be used to render Twig templates. The `TemplateRenderer` class is initialized with the `Twig` environment and can be employed to render templates. All templates should be defined in the `templates` directory.
+Product details
 
-## Provided PHP packages
-With the foundation, we provide you with several PHP packages out-of-the-box. These packages are included in the `composer.json` file and can be utilized to enhance the functionality of the project.
+Clicking a product opens:
 
-- `guzzlehttp/guzzle` - A PHP HTTP client that simplifies sending HTTP requests. [Learn more](https://docs.guzzlephp.org/en/stable/).
-- `symfony/routing` - Offers tools for routing requests to PHP code. [Learn more](https://symfony.com/doc/current/routing.html).
-- `symfony/config` - Assists in finding, loading, combining, autofilling, and validating configuration values of any kind, regardless of their source (YAML, XML, INI files, or even a database). [Learn more](https://symfony.com/doc/current/components/config.html).
-- `symfony/yaml` - Provides tools for handling YAML files. [Learn more](https://symfony.com/doc/current/components/yaml.html).
-- `symfony/http-foundation` - Defines an object-oriented layer for the HTTP specification. [Learn more](https://symfony.com/doc/current/components/http_foundation.html).
-- `symfony/dependency-injection` - Enables you to standardize and centralize the way objects are constructed in your application. [Learn more](https://symfony.com/doc/current/components/dependency_injection.html).
-- `symfony/finder` - Offers tools for locating files and directories. [Learn more](https://symfony.com/doc/current/components/finder.html).
-- `ext-pdo` - The PHP Data Objects (PDO) extension provides a lightweight, consistent interface for accessing databases in PHP. [Learn more](https://www.php.net/manual/en/book.pdo.php).
-- `twig/twig` - A flexible, fast, and secure template engine for PHP. [Learn more](https://twig.symfony.com/).
+/product?id={id}
+
+The detail page displays additional information such as:
+
+Description
+Brand
+Category
+Original price
+Discount percentage
+Discounted price
+Stock
+Product image
+Architecture
+
+The project is divided into a small core package and an application package.
+
+packages/
+├── core/
+│   ├── config/
+│   └── src/
+│       ├── Database/
+│       ├── Render/
+│       ├── Routing/
+│       └── Bootstrap.php
+│
+└── app/
+    ├── config/
+    └── src/
+        ├── Api/
+        ├── Controller/
+        ├── Repository/
+        └── Service/
+Core
+
+The core package contains reusable application infrastructure:
+
+Database connection
+Dependency Injection bootstrap
+Routing
+Twig rendering
+App
+
+The app package contains assignment-specific functionality:
+
+Controllers
+Product repository
+DummyJSON API client
+Product import service
+Product price calculation
+
+This separation keeps the application logic independent from the basic infrastructure.
+
+Application Flow
+
+The application has a single public entry point:
+
+public/index.php
+
+The flow is:
+
+Browser
+   ↓
+public/index.php
+   ↓
+Bootstrap
+   ↓
+Dependency Injection Container
+   ↓
+Router
+   ↓
+Controller
+   ↓
+Service / Repository
+   ↓
+MySQL
+
+For example, when opening the product catalogue:
+
+GET /
+  ↓
+IndexController
+  ↓
+ProductRepository
+  ↓
+MySQL
+  ↓
+ProductPriceCalculator
+  ↓
+Twig template
+  ↓
+HTML response
+
+For a product detail page:
+
+GET /product?id=1
+  ↓
+ProductController
+  ↓
+ProductRepository
+  ↓
+MySQL
+  ↓
+ProductPriceCalculator
+  ↓
+Twig
+Import Architecture
+
+The import process is separated into different responsibilities.
+
+bin/import-products.php
+        ↓
+ImportService
+        ↓
+DummyJsonClient
+        ↓
+DummyJSON API
+        ↓
+ProductRepository
+        ↓
+MySQL
+DummyJsonClient
+
+Responsible only for communicating with the external API.
+
+ImportService
+
+Responsible for coordinating the import process.
+
+ProductRepository
+
+Responsible for persisting product data in the database.
+
+This separation makes each part easier to test and maintain.
+
+Database
+
+The application uses MySQL 8.
+
+The main table is:
+
+product
+
+The table stores information including:
+
+id
+title
+description
+category
+price
+discount_percentage
+brand
+thumbnail
+rating
+stock
+sku
+
+The database schema is located at:
+
+database/schema.sql
+
+The product ID from DummyJSON is used as the primary key.
+
+Price Calculation
+
+Discount calculation is handled by a dedicated service:
+
+ProductPriceCalculator
+
+The calculation is:
+
+discounted price = price × (1 - discount percentage / 100)
+
+The result is rounded to two decimal places.
+
+For example:
+
+Original price:       €100.00
+Discount:                 20%
+Discounted price:      €80.00
+
+Keeping this calculation in a separate service prevents business logic from being mixed into the controller or template.
+
+Filtering and Sorting
+
+The product catalogue supports filtering by:
+
+Category
+Brand
+
+It also supports sorting by:
+
+Title
+Price
+Brand
+Category
+Discount percentage
+
+Sorting direction can be:
+
+Ascending
+Descending
+
+User-controlled sorting is restricted to a predefined list of allowed database columns. This prevents arbitrary column names from being inserted into the SQL query.
+
+Testing
+
+The project uses PHPUnit for automated testing.
+
+Run the test suite with:
+
+docker compose run --rm app vendor/bin/phpunit
+
+Current test coverage includes the product price calculation.
+
+Example:
+
+OK (1 test, 1 assertion)
+
+The test configuration is located in:
+
+phpunit.xml
+
+Tests are located in:
+
+tests/
+Docker
+
+The application runs using Docker Compose.
+
+The environment contains:
+
+Application
+
+PHP 8.2 with Apache.
+
+Apache is configured to use:
+
+/var/www/html/public
+
+as its document root.
+
+Database
+
+MySQL 8.0.
+
+phpMyAdmin
+
+phpMyAdmin is included to make database inspection easier during development.
+
+The application communicates with MySQL using the Docker service name:
+
+db
+
+rather than localhost.
+
+Composer
+
+Composer is used for dependency management.
+
+The project uses external packages including:
+
+guzzlehttp/guzzle — HTTP client
+symfony/routing — routing
+symfony/config — configuration
+symfony/yaml — YAML configuration
+symfony/http-foundation — HTTP foundation
+symfony/dependency-injection — dependency injection
+symfony/finder — filesystem discovery
+twig/twig — template rendering
+phpunit/phpunit — automated testing
+
+No PHP framework is used.
+
+The application-specific and core packages are registered through Composer PSR-4 autoloading.
+
+Project Structure
+.
+├── bin/
+│   └── import-products.php
+│
+├── config/
+│   └── routes.yaml
+│
+├── database/
+│   └── schema.sql
+│
+├── packages/
+│   ├── app/
+│   │   ├── config/
+│   │   │   └── services.yaml
+│   │   └── src/
+│   │       ├── Api/
+│   │       │   └── DummyJsonClient.php
+│   │       ├── Controller/
+│   │       │   ├── IndexController.php
+│   │       │   └── ProductController.php
+│   │       ├── Repository/
+│   │       │   └── ProductRepository.php
+│   │       └── Service/
+│   │           ├── ImportService.php
+│   │           └── ProductPriceCalculator.php
+│   │
+│   └── core/
+│       ├── config/
+│       │   └── services.yaml
+│       └── src/
+│           ├── Database/
+│           │   └── Connection.php
+│           ├── Render/
+│           │   └── TemplateRenderer.php
+│           ├── Routing/
+│           │   └── Router.php
+│           └── Bootstrap.php
+│
+├── public/
+│   ├── css/
+│   │   └── style.css
+│   ├── .htaccess
+│   └── index.php
+│
+├── templates/
+│   ├── index.html.twig
+│   └── product.html.twig
+│
+├── tests/
+│   └── ProductPriceCalculatorTest.php
+│
+├── composer.json
+├── composer.lock
+├── docker-compose.yml
+├── Dockerfile
+└── phpunit.xml
+Technical Decisions
+
+A few deliberate technical choices were made during the implementation.
+
+Database as the source for the catalogue
+
+The external API is used only during the import process.
+
+The web application reads products from MySQL. This means the catalogue does not depend on the availability of DummyJSON for every page request.
+
+Separation of responsibilities
+
+API communication, importing, database access and price calculation are implemented in separate classes.
+
+This keeps controllers relatively small and makes the code easier to change.
+
+Dependency Injection
+
+Services and repositories are injected through the Symfony Dependency Injection container rather than being instantiated directly inside controllers.
+
+Safe sorting
+
+Sorting parameters received from the browser are mapped against an allowlist before being added to the SQL query.
+
+Repeatable imports
+
+The product ID is used as the primary key and the repository uses an upsert strategy. Running the importer again updates existing products instead of creating duplicates.
+
+Useful Commands
+Start the application
+docker compose up -d --build
+Stop the application
+docker compose down
+Import products
+docker compose run --rm app php bin/import-products.php
+Run tests
+docker compose run --rm app vendor/bin/phpunit
+Check Git status
+git status
