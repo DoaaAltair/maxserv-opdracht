@@ -94,9 +94,14 @@ final readonly class ProductRepository
     /**
      * @return array<int, array<string, mixed>>
      */
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function findByFilters(
         ?string $category = null,
-        ?string $brand = null
+        ?string $brand = null,
+        string $sort = 'title',
+        string $direction = 'asc'
     ): array {
         $conditions = [];
         $parameters = [];
@@ -111,6 +116,20 @@ final readonly class ProductRepository
             $parameters['brand'] = $brand;
         }
 
+        $allowedSorts = [
+            'title',
+            'price',
+            'brand',
+            'category',
+            'discount_percentage',
+        ];
+
+        if (!in_array($sort, $allowedSorts, true)) {
+            $sort = 'title';
+        }
+
+        $direction = strtolower($direction) === 'desc' ? 'DESC' : 'ASC';
+
         $sql = 'SELECT id, title, price, discount_percentage, brand, category, thumbnail
             FROM product';
 
@@ -118,7 +137,7 @@ final readonly class ProductRepository
             $sql .= ' WHERE ' . implode(' AND ', $conditions);
         }
 
-        $sql .= ' ORDER BY title ASC';
+        $sql .= " ORDER BY {$sort} {$direction}";
 
         $statement = $this->pdo->prepare($sql);
         $statement->execute($parameters);
