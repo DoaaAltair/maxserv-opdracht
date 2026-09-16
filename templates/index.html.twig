@@ -3,22 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaxServ Products</title>
+    <title>MaxServ | Product Catalogue</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-    <header>
+
+<header class="catalog-header">
+    <div class="catalog-header-content">
         <div>
-            <p>MAXSERV ASSIGNMENT</p>
-            <h1>Product catalogus</h1>
-            <p>{{ products|length }} producten uit onze database</p>
+            <p class="eyebrow">MAXSERV / PRODUCT CATALOGUE</p>
+
+            <h1>Product catalogue</h1>
+
+            <p class="catalog-description">
+                Bekijk ons productaanbod en ontdek producten op basis van categorie, merk en prijs.
+            </p>
         </div>
-    </header>
 
-    <main>
+        <div class="catalog-count">
+            <strong>{{ products|length }}</strong>
+            <span>producten</span>
+        </div>
+    </div>
+</header>
 
-        <form method="get" class="filters">
+<main class="catalog-main">
+
+    <div class="catalog-intro">
+        <div>
+            <p class="section-label">PRODUCTEN</p>
+            <h2>Ontdek de collectie</h2>
+        </div>
+
+        <p class="result-count">
+            {{ products|length }} producten gevonden
+        </p>
+    </div>
+
+    <form method="get" class="filters">
+
+        <div class="filter-group">
             <label for="category">Categorie</label>
 
             <select name="category" id="category" onchange="this.form.submit()">
@@ -30,7 +55,9 @@
                     </option>
                 {% endfor %}
             </select>
+        </div>
 
+        <div class="filter-group">
             <label for="brand">Merk</label>
 
             <select name="brand" id="brand">
@@ -42,26 +69,36 @@
                     </option>
                 {% endfor %}
             </select>
+        </div>
 
-            <label for="sort">Sorteren</label>
+        <div class="filter-group">
+            <label for="sort">Sorteren op</label>
 
             <select name="sort" id="sort">
                 <option value="title" {% if sort == 'title' %}selected{% endif %}>
                     Naam
                 </option>
+
                 <option value="price" {% if sort == 'price' %}selected{% endif %}>
                     Prijs
                 </option>
+
                 <option value="brand" {% if sort == 'brand' %}selected{% endif %}>
                     Merk
                 </option>
+
                 <option value="category" {% if sort == 'category' %}selected{% endif %}>
                     Categorie
                 </option>
+
                 <option value="discount_percentage" {% if sort == 'discount_percentage' %}selected{% endif %}>
                     Korting
                 </option>
             </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="direction">Volgorde</label>
 
             <select name="direction" id="direction">
                 <option value="asc" {% if direction == 'asc' %}selected{% endif %}>
@@ -72,50 +109,107 @@
                     Aflopend
                 </option>
             </select>
-            <button type="submit">Filter</button>
-        </form>
+        </div>
 
-        {% if products is empty %}
-            <p>Er zijn nog geen producten geïmporteerd.</p>
-        {% else %}
-            <section>
-                {% for product in products %}
-                    <a href="/product?id={{ product.id }}" class="product-card">
-                        <article>
-                            {% if product.thumbnail %}
+        <div class="filter-actions">
+
+            {% if category or brand %}
+                <a href="/" class="reset-button">
+                    Reset
+                </a>
+            {% endif %}
+
+            <button type="submit" class="filter-button">
+                Filters toepassen
+            </button>
+
+        </div>
+
+    </form>
+
+    {% if products is empty %}
+
+        <section class="empty-state">
+            <p class="section-label">GEEN RESULTATEN</p>
+            <h2>Geen producten gevonden</h2>
+            <p>
+                Probeer een andere categorie of een ander merk te selecteren.
+            </p>
+        </section>
+
+    {% else %}
+
+        <section class="product-grid">
+
+            {% for product in products %}
+
+                <a href="/product?id={{ product.id }}" class="product-card">
+                    <article>
+
+                        {% if product.thumbnail %}
+                            <div class="product-image-wrapper">
                                 <img
                                     src="{{ product.thumbnail }}"
                                     alt="{{ product.title }}"
-                                    width="200"
                                 >
-                            {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="product-image-wrapper product-image-placeholder">
+                                <span>Geen afbeelding</span>
+                            </div>
+                        {% endif %}
 
-                            <div>
-                                <span>{{ product.category }}</span>
+                        <div class="product-card-content">
 
-                                <h2>{{ product.title }}</h2>
+                            <div class="product-card-header">
+                                <span class="product-category">
+                                    {{ product.category }}
+                                </span>
 
-                                <p>{{ product.brand ?? 'Onbekend merk' }}</p>
+                                {% if product.discount_percentage > 0 %}
+                                    <span class="discount-badge">
+                                        -{{ product.discount_percentage|number_format(2, ',', '.') }}%
+                                    </span>
+                                {% endif %}
+                            </div>
 
-                                <div>
-                                    <span>
+                            <h2>{{ product.title }}</h2>
+
+                            <p class="product-brand">
+                                {{ product.brand ?? 'Onbekend merk' }}
+                            </p>
+
+                            <div class="product-price">
+
+                                <div class="price-row">
+                                    <span class="original-price">
                                         €{{ product.price|number_format(2, ',', '.') }}
                                     </span>
-
-                                    <span>
-                                        {{ product.discount_percentage|number_format(2, ',', '.') }}% korting
-                                    </span>
-
-                                    <strong>
-                                        €{{ product.discount_price|number_format(2, ',', '.') }}
-                                    </strong>
                                 </div>
+
+                                <strong class="discounted-price">
+                                    €{{ product.discount_price|number_format(2, ',', '.') }}
+                                </strong>
+
                             </div>
-                        </article>
-                    </a>
-                {% endfor %}
-            </section>
-        {% endif %}
-    </main>
+
+                            <span class="product-link">
+                                Bekijk product
+                                <span aria-hidden="true">→</span>
+                            </span>
+
+                        </div>
+
+                    </article>
+                </a>
+
+            {% endfor %}
+
+        </section>
+
+    {% endif %}
+
+</main>
+
 </body>
 </html>

@@ -9,41 +9,105 @@
 
 <body>
 
-<header>
-    <div>
-        <p>MAXSERV ASSIGNMENT</p>
-        <h1>{{ product.title }}</h1>
-        <p>{{ product.category }}</p>
-    </div>
-</header>
+<main class="product-detail">
 
-<main>
-    <a href="/">← Terug naar producten</a>
+    <a href="/" class="back-link">
+        ← Terug naar catalogue
+    </a>
 
-    {% if product.thumbnail %}
-    <div class="product-detail-image-wrapper">
-        <img
-            class="product-detail-image"
-            src="{{ product.thumbnail }}"
-            alt="{{ product.title }}"
-        >
-    </div>
-    {% endif %}
+    <section class="product-detail-layout">
 
-    <h2>{{ product.title }}</h2>
+        <div class="product-detail-image-wrapper">
 
-    <p>{{ product.description }}</p>
+            {% if product.thumbnail %}
+                <img
+                    class="product-detail-image"
+                    src="{{ product.thumbnail }}"
+                    alt="{{ product.title }}"
+                >
+            {% else %}
+                <div class="product-detail-image-placeholder">
+                    Geen afbeelding beschikbaar
+                </div>
+            {% endif %}
 
-    <p>Merk: {{ product.brand ?? 'Onbekend merk' }}</p>
+        </div>
 
-    <p>Prijs: €{{ product.price|number_format(2, ',', '.') }}</p>
+        <div class="product-detail-content">
 
-    <p>Korting: {{ product.discount_percentage|number_format(2, ',', '.') }}%</p>
-    <p>
-    Actieprijs:<strong>€{{ product.discount_price|number_format(2, ',', '.') }}</strong>
-    </p>
+            <span class="product-category">
+                {{ product.category }}
+            </span>
 
-    <p>Voorraad: {{ product.stock }}</p>
+            <h1>{{ product.title }}</h1>
+
+            <p class="product-detail-brand">
+                {{ product.brand ?? 'Onbekend merk' }}
+            </p>
+
+            <div class="product-detail-price">
+
+                <span class="product-detail-original-price">
+                    €{{ product.price|number_format(2, ',', '.') }}
+                </span>
+
+                {% if product.discount_percentage > 0 %}
+                    <span class="discount-badge">
+                        -{{ product.discount_percentage|number_format(2, ',', '.') }}%
+                    </span>
+                {% endif %}
+
+                <strong>
+                    €{{ product.discount_price|number_format(2, ',', '.') }}
+                </strong>
+
+            </div>
+
+            <div class="product-stock">
+                <span class="stock-dot"></span>
+                Voorraad: {{ product.stock }}
+            </div>
+
+            <div class="product-description">
+                <h2>Over dit product</h2>
+
+                <p>
+                    {{ product.description }}
+                </p>
+            </div>
+
+            <div class="product-meta">
+
+                <div>
+                    <span>Merk</span>
+                    <strong>{{ product.brand ?? 'Onbekend' }}</strong>
+                </div>
+
+                <div>
+                    <span>Categorie</span>
+                    <strong>{{ product.category }}</strong>
+                </div>
+
+                {% if product.sku %}
+                    <div>
+                        <span>SKU</span>
+                        <strong>{{ product.sku }}</strong>
+                    </div>
+                {% endif %}
+
+                {% if product.rating %}
+                    <div>
+                        <span>Rating</span>
+                        <strong>{{ product.rating|number_format(2, ',', '.') }} / 5</strong>
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
 </main>
 
 </body>
