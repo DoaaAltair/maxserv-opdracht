@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.title }} | MaxServ</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<header>
+    <div>
+        <p>MAXSERV ASSIGNMENT</p>
+        <h1>{{ product.title }}</h1>
+        <p>{{ product.category }}</p>
+    </div>
+</header>
+
+<main>
+    <a href="/">← Terug naar producten</a>
+
+    {% if product.thumbnail %}
+    <div class="product-detail-image-wrapper">
+        <img
+            class="product-detail-image"
+            src="{{ product.thumbnail }}"
+            alt="{{ product.title }}"
+        >
+    </div>
+    {% endif %}
+
+    <h2>{{ product.title }}</h2>
+
+    <p>{{ product.description }}</p>
+
+    <p>Merk: {{ product.brand ?? 'Onbekend merk' }}</p>
+
+    <p>Prijs: €{{ product.price|number_format(2, ',', '.') }}</p>
+
+    <p>Korting: {{ product.discount_percentage|number_format(2, ',', '.') }}%</p>
+    <p>
+    Actieprijs:<strong>€{{ product.discount_price|number_format(2, ',', '.') }}</strong>
+    </p>
+
+    <p>Voorraad: {{ product.stock }}</p>
+</main>
+
+</body>
+</html>

@@ -7,7 +7,8 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Install and enable mysql modules for PHP
 RUN docker-php-ext-install mysqli pdo pdo_mysql && \
-    docker-php-ext-enable mysqli pdo pdo_mysql
+    docker-php-ext-enable mysqli pdo pdo_mysql && \
+    a2enmod rewrite
 
 # Set an environment variable which contains the apache document root
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public

@@ -92,6 +92,26 @@ final readonly class ProductRepository
     }
 
     /**
+     * @return array<string, mixed>|null
+     */
+    public function findById(int $id): ?array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT *
+         FROM product
+         WHERE id = :id'
+        );
+
+        $statement->execute([
+            'id' => $id,
+        ]);
+
+        $product = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return $product ?: null;
+    }
+
+    /**
      * @return array<int, array<string, mixed>>
      */
     /**

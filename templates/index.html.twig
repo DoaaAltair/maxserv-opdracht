@@ -80,37 +80,39 @@
         {% else %}
             <section>
                 {% for product in products %}
-                    <article>
-                        {% if product.thumbnail %}
-                            <img
-                                src="{{ product.thumbnail }}"
-                                alt="{{ product.title }}"
-                                width="200"
-                            >
-                        {% endif %}
-
-                        <div>
-                            <span>{{ product.category }}</span>
-
-                            <h2>{{ product.title }}</h2>
-
-                            <p>{{ product.brand ?? 'Onbekend merk' }}</p>
+                    <a href="/product?id={{ product.id }}" class="product-card">
+                        <article>
+                            {% if product.thumbnail %}
+                                <img
+                                    src="{{ product.thumbnail }}"
+                                    alt="{{ product.title }}"
+                                    width="200"
+                                >
+                            {% endif %}
 
                             <div>
-                                <span>
-                                    €{{ product.price|number_format(2, ',', '.') }}
-                                </span>
+                                <span>{{ product.category }}</span>
 
-                                <span>
-                                    {{ product.discount_percentage|number_format(2, ',', '.') }}% korting
-                                </span>
+                                <h2>{{ product.title }}</h2>
 
-                                <strong>
-                                    €{{ product.discount_price|number_format(2, ',', '.') }}
-                                </strong>
+                                <p>{{ product.brand ?? 'Onbekend merk' }}</p>
+
+                                <div>
+                                    <span>
+                                        €{{ product.price|number_format(2, ',', '.') }}
+                                    </span>
+
+                                    <span>
+                                        {{ product.discount_percentage|number_format(2, ',', '.') }}% korting
+                                    </span>
+
+                                    <strong>
+                                        €{{ product.discount_price|number_format(2, ',', '.') }}
+                                    </strong>
+                                </div>
                             </div>
-                        </div>
-                    </article>
+                        </article>
+                    </a>
                 {% endfor %}
             </section>
         {% endif %}
