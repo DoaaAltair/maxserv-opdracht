@@ -17,6 +17,35 @@
     </header>
 
     <main>
+
+        <form method="get" class="filters">
+            <label for="category">Categorie</label>
+
+            <select name="category" id="category" onchange="this.form.submit()">
+                <option value="">Alle categorieën</option>
+
+                {% for item in categories %}
+                    <option value="{{ item }}" {% if category == item %}selected{% endif %}>
+                        {{ item|capitalize }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="brand">Merk</label>
+
+            <select name="brand" id="brand">
+                <option value="">Alle merken</option>
+
+                {% for item in brands %}
+                    <option value="{{ item }}" {% if brand == item %}selected{% endif %}>
+                        {{ item }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Filter</button>
+        </form>
+
         {% if products is empty %}
             <p>Er zijn nog geen producten geïmporteerd.</p>
         {% else %}

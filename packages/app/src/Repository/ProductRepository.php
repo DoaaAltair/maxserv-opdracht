@@ -90,4 +90,81 @@ final readonly class ProductRepository
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findByFilters(
+        ?string $category = null,
+        ?string $brand = null
+    ): array {
+        $conditions = [];
+        $parameters = [];
+
+        if ($category !== null && $category !== '') {
+            $conditions[] = 'category = :category';
+            $parameters['category'] = $category;
+        }
+
+        if ($brand !== null && $brand !== '') {
+            $conditions[] = 'brand = :brand';
+            $parameters['brand'] = $brand;
+        }
+
+        $sql = 'SELECT id, title, price, discount_percentage, brand, category, thumbnail
+            FROM product';
+
+        if ($conditions !== []) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+
+        $sql .= ' ORDER BY title ASC';
+
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($parameters);
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function findCategories(): array
+    {
+        $statement = $this->pdo->query(
+            'SELECT DISTINCT category
+         FROM product
+         ORDER BY category ASC'
+        );
+
+        return $statement->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    /**
+     * @return array<int, string>
+     */
+    public function findBrands(?string $category = null): array
+    {
+        $sql = 'SELECT DISTINCT brand
+            FROM product
+            WHERE brand IS NOT NULL
+              AND brand != ""';
+
+        $parameters = [];
+
+        if ($category !== null && $category !== '') {
+            $sql .= ' AND category = :category';
+            $parameters['category'] = $category;
+        }
+
+        $sql .= ' ORDER BY brand ASC';
+
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($parameters);
+
+        return $statement->fetchAll(PDO::FETCH_COLUMN);
+    }
 }

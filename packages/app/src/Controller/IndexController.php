@@ -25,8 +25,17 @@ readonly class IndexController
      */
     public function index(): void
     {
-        // Your logic here
-        $products = $this->productRepository->findAll();
+        $category = $_GET['category'] ?? null;
+        $brand = $_GET['brand'] ?? null;
+
+        $products = $this->productRepository->findByFilters(
+            $category,
+            $brand
+        );
+
+        $categories = $this->productRepository->findCategories();
+
+        $brands = $this->productRepository->findBrands($category);
 
         foreach ($products as &$product) {
             $product['discount_price'] = $this->priceCalculator->calculateDiscountPrice(
@@ -34,11 +43,14 @@ readonly class IndexController
                 (float) $product['discount_percentage']
             );
         }
-
         unset($product);
 
         echo $this->templateRenderer->render('index.html.twig', [
             'products' => $products,
+            'category' => $category,
+            'brand' => $brand,
+            'categories' => $categories,
+            'brands' => $brands,
         ]);
     }
 }
