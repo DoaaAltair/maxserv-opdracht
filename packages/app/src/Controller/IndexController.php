@@ -13,7 +13,8 @@ readonly class IndexController
 {
     public function __construct(
         private TemplateRenderer $templateRenderer,
-        private \MaxServ\App\Repository\ProductRepository $productRepository
+        private \MaxServ\App\Repository\ProductRepository $productRepository,
+        private \MaxServ\App\Service\ProductPriceCalculator $priceCalculator
     ) {
     }
 
@@ -26,6 +27,15 @@ readonly class IndexController
     {
         // Your logic here
         $products = $this->productRepository->findAll();
+
+        foreach ($products as &$product) {
+            $product['discount_price'] = $this->priceCalculator->calculateDiscountPrice(
+                (float) $product['price'],
+                (float) $product['discount_percentage']
+            );
+        }
+
+        unset($product);
 
         echo $this->templateRenderer->render('index.html.twig', [
             'products' => $products,

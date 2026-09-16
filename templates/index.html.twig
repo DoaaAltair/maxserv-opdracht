@@ -17,11 +17,20 @@
             <ul>
                 {% for product in products %}
                     <li>
-                        <strong>{{ product.title }}</strong>
-                        — €{{ product.price|number_format(2, ',', '.') }}
-                        — {{ product.brand ?? 'Onbekend merk' }}
-                        — {{ product.category }}
-                    </li>
+    <strong>{{ product.title }}</strong>
+
+    — Normaal:
+    €{{ product.price|number_format(2, ',', '.') }}
+
+    — Korting:
+    {{ product.discount_percentage|number_format(2, ',', '.') }}%
+
+    — Nu:
+    €{{ product.discount_price|number_format(2, ',', '.') }}
+
+    — {{ product.brand ?? 'Onbekend merk' }}
+    — {{ product.category }}
+</li>
                 {% endfor %}
             </ul>
         {% endif %}

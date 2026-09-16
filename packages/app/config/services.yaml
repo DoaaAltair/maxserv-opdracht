@@ -21,3 +21,6 @@ services:
 
   MaxServ\App\Service\ImportService:
     public: true
+
+  MaxServ\App\Service\ProductPriceCalculator:
+    public: true
