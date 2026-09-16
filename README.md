@@ -118,6 +118,68 @@ No PHP framework is used.
 
 ---
 
+## UI/UX Improvements
+
+The product catalogue was refined with a focus on clarity, consistency and ease of use.
+
+### Catalogue Header
+
+The catalogue uses a compact dark-blue header to create a clear visual introduction without taking unnecessary vertical space.
+
+The header contains:
+
+- Catalogue title
+- Short supporting description
+- Imported product count
+
+The product count is visually separated from the main content so users can quickly understand the size of the catalogue.
+
+### Floating Filter Bar
+
+The filtering interface was redesigned as a floating panel positioned across the bottom edge of the header.
+
+The filter panel contains:
+
+- Category filter
+- Brand filter
+- Sort option
+- Sort direction
+- Reset action when filters are active
+- Apply filters action
+
+The floating positioning creates a clear visual connection between the catalogue introduction and the product overview while keeping the filtering controls easy to find.
+
+### Product Cards
+
+The product cards were redesigned to create a consistent visual hierarchy.
+
+Each card contains:
+
+1. Product image
+2. Category
+3. Discount indicator when applicable
+4. Product title
+5. Brand
+6. Original price
+7. Calculated discounted price
+8. Link to the product detail page
+
+Cards use consistent spacing, rounded corners, subtle borders and hover interactions.
+
+### Responsive Design
+
+The catalogue layout adapts to different screen sizes.
+
+The product grid changes from four columns on larger screens to fewer columns on smaller screens, while the filter controls also adapt for tablet and mobile layouts.
+
+### Accessibility
+
+Interactive product cards include visible keyboard focus states.
+
+The interface also uses clear text hierarchy, sufficient spacing and consistent interaction states to make the catalogue easier to navigate.
+
+---
+
 ## Requirements
 
 The following software is required:
