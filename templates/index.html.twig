@@ -3,36 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Producten | MaxServ</title>
+    <title>MaxServ Products</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
-    <main>
-        <h1>Producten</h1>
 
+<body>
+    <header>
+        <div>
+            <p>MAXSERV ASSIGNMENT</p>
+            <h1>Product catalogus</h1>
+            <p>{{ products|length }} producten uit onze database</p>
+        </div>
+    </header>
+
+    <main>
         {% if products is empty %}
             <p>Er zijn nog geen producten geïmporteerd.</p>
         {% else %}
-            <p>{{ products|length }} producten gevonden.</p>
-
-            <ul>
+            <section>
                 {% for product in products %}
-                    <li>
-    <strong>{{ product.title }}</strong>
+                    <article>
+                        {% if product.thumbnail %}
+                            <img
+                                src="{{ product.thumbnail }}"
+                                alt="{{ product.title }}"
+                                width="200"
+                            >
+                        {% endif %}
 
-    — Normaal:
-    €{{ product.price|number_format(2, ',', '.') }}
+                        <div>
+                            <span>{{ product.category }}</span>
 
-    — Korting:
-    {{ product.discount_percentage|number_format(2, ',', '.') }}%
+                            <h2>{{ product.title }}</h2>
 
-    — Nu:
-    €{{ product.discount_price|number_format(2, ',', '.') }}
+                            <p>{{ product.brand ?? 'Onbekend merk' }}</p>
 
-    — {{ product.brand ?? 'Onbekend merk' }}
-    — {{ product.category }}
-</li>
+                            <div>
+                                <span>
+                                    €{{ product.price|number_format(2, ',', '.') }}
+                                </span>
+
+                                <span>
+                                    {{ product.discount_percentage|number_format(2, ',', '.') }}% korting
+                                </span>
+
+                                <strong>
+                                    €{{ product.discount_price|number_format(2, ',', '.') }}
+                                </strong>
+                            </div>
+                        </div>
+                    </article>
                 {% endfor %}
-            </ul>
+            </section>
         {% endif %}
     </main>
 </body>
