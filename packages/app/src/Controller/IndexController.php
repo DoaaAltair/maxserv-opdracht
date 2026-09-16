@@ -27,10 +27,14 @@ readonly class IndexController
     {
         $category = $_GET['category'] ?? null;
         $brand = $_GET['brand'] ?? null;
+        $sort = $_GET['sort'] ?? 'title';
+        $direction = $_GET['direction'] ?? 'asc';
 
         $products = $this->productRepository->findByFilters(
             $category,
-            $brand
+            $brand,
+            $sort,
+            $direction
         );
 
         $categories = $this->productRepository->findCategories();
@@ -51,6 +55,8 @@ readonly class IndexController
             'brand' => $brand,
             'categories' => $categories,
             'brands' => $brands,
+            'sort' => $sort,
+            'direction' => $direction,
         ]);
     }
 }

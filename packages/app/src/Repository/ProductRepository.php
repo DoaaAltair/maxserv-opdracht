@@ -117,12 +117,14 @@ final readonly class ProductRepository
         }
 
         $allowedSorts = [
-            'title',
-            'price',
-            'brand',
-            'category',
-            'discount_percentage',
+            'title' => 'title',
+            'price' => '(price * (1 - discount_percentage / 100))',
+            'brand' => 'brand',
+            'category' => 'category',
+            'discount_percentage' => 'discount_percentage',
         ];
+
+        $sortColumn = $allowedSorts[$sort] ?? $allowedSorts['title'];
 
         if (!in_array($sort, $allowedSorts, true)) {
             $sort = 'title';
@@ -137,7 +139,7 @@ final readonly class ProductRepository
             $sql .= ' WHERE ' . implode(' AND ', $conditions);
         }
 
-        $sql .= " ORDER BY {$sort} {$direction}";
+        $sql .= " ORDER BY {$sortColumn} {$direction}";
 
         $statement = $this->pdo->prepare($sql);
         $statement->execute($parameters);

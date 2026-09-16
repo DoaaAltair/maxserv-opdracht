@@ -43,6 +43,35 @@
                 {% endfor %}
             </select>
 
+            <label for="sort">Sorteren</label>
+
+            <select name="sort" id="sort">
+                <option value="title" {% if sort == 'title' %}selected{% endif %}>
+                    Naam
+                </option>
+                <option value="price" {% if sort == 'price' %}selected{% endif %}>
+                    Prijs
+                </option>
+                <option value="brand" {% if sort == 'brand' %}selected{% endif %}>
+                    Merk
+                </option>
+                <option value="category" {% if sort == 'category' %}selected{% endif %}>
+                    Categorie
+                </option>
+                <option value="discount_percentage" {% if sort == 'discount_percentage' %}selected{% endif %}>
+                    Korting
+                </option>
+            </select>
+
+            <select name="direction" id="direction">
+                <option value="asc" {% if direction == 'asc' %}selected{% endif %}>
+                    Oplopend
+                </option>
+
+                <option value="desc" {% if direction == 'desc' %}selected{% endif %}>
+                    Aflopend
+                </option>
+            </select>
             <button type="submit">Filter</button>
         </form>
 
