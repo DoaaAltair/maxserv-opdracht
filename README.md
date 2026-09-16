@@ -2,7 +2,7 @@
 
 A Dockerized PHP application built as part of the MaxServ B.V. technical assignment.
 
-The application imports products from the DummyJSON API, stores them in a MySQL database and provides a web-based product catalogue that reads the data from the database.
+The application imports products from the DummyJSON API, stores them in a MySQL database, and provides a web-based product catalogue that reads the data from the database.
 
 The implementation uses plain PHP without a PHP framework. External PHP packages are used where appropriate.
 
@@ -57,21 +57,24 @@ Composer is included in the Docker image, so installing Composer locally is not 
 ```bash
 git clone https://github.com/DoaaAltair/maxserv-opdracht.git
 cd maxserv-opdracht
+
+
+
 2. Start the Docker environment
 docker compose up -d --build
 
-The following services will be started:
+The following services will be available:
 
 Service	URL
 Application	http://localhost:8080
 phpMyAdmin	http://localhost:8081
 MySQL	localhost:3307
 
-The application uses MySQL internally through the Docker service name db.
+The application connects to MySQL internally through the Docker service name db.
 
 Import Products
 
-The database schema is created from:
+The database schema is defined in:
 
 database/schema.sql
 
@@ -85,7 +88,7 @@ https://dummyjson.com/products?limit=0
 
 and stores them in the MySQL database.
 
-The import process uses an ON DUPLICATE KEY UPDATE strategy, which makes the import command safe to run multiple times without creating duplicate products.
+The import process uses an ON DUPLICATE KEY UPDATE strategy. This makes the import command safe to run multiple times without creating duplicate products.
 
 Application
 
@@ -97,7 +100,7 @@ The product catalogue is loaded from the MySQL database.
 
 The browser does not request product data directly from DummyJSON.
 
-Product catalogue
+Product Catalogue
 
 The overview displays:
 
@@ -111,7 +114,7 @@ Calculated discounted price
 
 Products can be filtered and sorted directly from the catalogue.
 
-Product details
+Product Details
 
 Clicking a product opens:
 
@@ -165,7 +168,7 @@ DummyJSON API client
 Product import service
 Product price calculation
 
-This separation keeps the application logic independent from the basic infrastructure.
+This separation keeps application-specific logic independent from the basic infrastructure.
 
 Application Flow
 
@@ -173,7 +176,7 @@ The application has a single public entry point:
 
 public/index.php
 
-The flow is:
+The general request flow is:
 
 Browser
    ↓
@@ -237,7 +240,7 @@ ProductRepository
 MySQL
 DummyJsonClient
 
-Responsible only for communicating with the external API.
+Responsible for communicating with the external API and returning the product data.
 
 ImportService
 
@@ -247,7 +250,7 @@ ProductRepository
 
 Responsible for persisting product data in the database.
 
-This separation makes each part easier to test and maintain.
+This separation makes the different parts easier to maintain and test.
 
 Database
 
@@ -291,9 +294,9 @@ The result is rounded to two decimal places.
 
 For example:
 
-Original price:       €100.00
-Discount:                 20%
-Discounted price:      €80.00
+Original price:      €100.00
+Discount:                20%
+Discounted price:     €80.00
 
 Keeping this calculation in a separate service prevents business logic from being mixed into the controller or template.
 
@@ -327,11 +330,7 @@ Run the test suite with:
 
 docker compose run --rm app vendor/bin/phpunit
 
-Current test coverage includes the product price calculation.
-
-Example:
-
-OK (1 test, 1 assertion)
+The current test coverage includes the product price calculation.
 
 The test configuration is located in:
 
@@ -340,15 +339,19 @@ phpunit.xml
 Tests are located in:
 
 tests/
+
+The current test suite contains:
+
+OK (1 test, 1 assertion)
 Docker
 
 The application runs using Docker Compose.
 
-The environment contains:
+The environment contains three services.
 
 Application
 
-PHP 8.2 with Apache.
+The application runs on PHP 8.2 with Apache.
 
 Apache is configured to use:
 
@@ -358,7 +361,7 @@ as its document root.
 
 Database
 
-MySQL 8.0.
+The database uses MySQL 8.0.
 
 phpMyAdmin
 
@@ -451,13 +454,13 @@ Technical Decisions
 
 A few deliberate technical choices were made during the implementation.
 
-Database as the source for the catalogue
+Database as the Source for the Catalogue
 
 The external API is used only during the import process.
 
 The web application reads products from MySQL. This means the catalogue does not depend on the availability of DummyJSON for every page request.
 
-Separation of responsibilities
+Separation of Responsibilities
 
 API communication, importing, database access and price calculation are implemented in separate classes.
 
@@ -467,13 +470,15 @@ Dependency Injection
 
 Services and repositories are injected through the Symfony Dependency Injection container rather than being instantiated directly inside controllers.
 
-Safe sorting
+Safe Sorting
 
 Sorting parameters received from the browser are mapped against an allowlist before being added to the SQL query.
 
-Repeatable imports
+Repeatable Imports
 
-The product ID is used as the primary key and the repository uses an upsert strategy. Running the importer again updates existing products instead of creating duplicates.
+The product ID is used as the primary key and the repository uses an upsert strategy.
+
+Running the importer again updates existing products instead of creating duplicates.
 
 Useful Commands
 Start the application
@@ -486,3 +491,6 @@ Run tests
 docker compose run --rm app vendor/bin/phpunit
 Check Git status
 git status
+License
+
+This project was created as an implementation of the MaxServ B.V. technical assignment.
