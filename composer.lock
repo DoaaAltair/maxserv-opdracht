@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd9293298bd63b606d64a93f02626a42",
+    "content-hash": "f2e24df47bc66ba39315a49436cadce0",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -333,7 +333,7 @@
         },
         {
             "name": "maxserv/app",
-            "version": "dev-implementatie-rickert",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "packages/app",
@@ -355,7 +355,7 @@
         },
         {
             "name": "maxserv/core",
-            "version": "dev-implementatie-rickert",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "packages/core",
@@ -1692,7 +1692,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "maxserv/app": 20,
+        "maxserv/core": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

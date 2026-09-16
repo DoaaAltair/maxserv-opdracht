@@ -19,8 +19,8 @@
     "symfony/finder": "^7.2",
     "ext-pdo": "*",
     "twig/twig": "^3.0",
-    "maxserv/app": "*",
-    "maxserv/core": "*"
+    "maxserv/app": "dev-main",
+    "maxserv/core": "dev-main"
   },
   "minimum-stability": "dev",
   "prefer-stable": true
